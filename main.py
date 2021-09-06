@@ -13,6 +13,7 @@ from fastapi import FastAPI, Request, File, UploadFile, BackgroundTasks
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from sqlmodel import SQLModel, Field
 
 # import chart and stats
 from utils.save_upload import save_uploaded_file
@@ -32,8 +33,31 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/upload", StaticFiles(directory="upload"), name="upload")
 templates = Jinja2Templates(directory="templates/")
 
-# set model upload folder
-model_upload_folder = None
+# setup for SQLmodels
+class bit_data(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    bit_size: int = Field(default=0, nullable=False)
+    bit_type: str = Field(default="", nullable=False)
+    mfg: str = Field(default="")
+    serial_no: str = Field(default="")
+    depth_in: float = Field(default=0.0)
+    depth_out: float = Field(default=0.0)
+    distance: float = Field(default=0.0)
+    hours: float = Field(default=0.0)
+    rop: float = Field(default=0.0)
+    inner: int = Field(default=0)
+    outer: int = Field(default=0)
+    main: str = Field(default="")
+    loc: str = Field(default="")
+    B: str = Field(default="X")
+    G: float = Field(default=0.0)
+    other: str = Field(default="")
+    reason_pulled: str = Field(default="")
+    well_name: str = Field(default="")
+    opertor: str = Field(default="")
+    lat: float = Field(default=0.0)
+    lon: float = Field(default=0.0)
+
 
 # Welcome page
 @app.get("/", response_class=HTMLResponse)
