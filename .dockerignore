@@ -1,0 +1,13 @@
+# ignore dockerfile
+Dockerfile
+
+#readme
+*.md
+
+# YAML files
+*.yaml
+
+# csv or excel files
+.xls
+.xlsx
+.csv
