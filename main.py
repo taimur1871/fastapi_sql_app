@@ -6,7 +6,7 @@ created on Sun Sep 5
 '''
 
 # Library imports
-from typing import List
+from typing import List, Optional
 from fastapi.datastructures import UploadFile
 
 from fastapi import FastAPI, Request, File, UploadFile, BackgroundTasks
@@ -17,7 +17,6 @@ from fastapi.templating import Jinja2Templates
 # import chart and stats
 from utils.save_upload import save_uploaded_file
 from utils.read_excel import parse_contents
-from process_data.eda import get_preds
 
 # python modules
 import time
@@ -51,8 +50,6 @@ async def upload(request:Request, background_tasks:BackgroundTasks,
     # create an upload folder directory using timestamp
     upload_folder = os.path.join('./upload', time.ctime(time.time()))
     os.makedirs(upload_folder)
-
-    model_path = './models/saved_model'
     
     # upload files, kept multi file upload option for now
     for file in files:
@@ -72,10 +69,6 @@ async def upload(request:Request, background_tasks:BackgroundTasks,
     # open file and get dataframe
     df_pred, _ = parse_contents(p, fn)
 
-    # get predicted dataframe
-    df_predicted = get_preds(df_pred, model_path)
-    df_predicted.drop('category', axis=1, inplace=True)
-
     return templates.TemplateResponse("datatable_version.html", 
     {"request": request, 
-    "data_summary": [df_predicted.to_html(table_id='table_id').replace('border="1"', ' ')]})
+    "data_summary": [df_pred.to_html(table_id='table_id').replace('border="1"', ' ')]})

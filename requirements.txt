@@ -12,6 +12,7 @@ scikit-learn==0.23.2
 scipy==1.4.1
 seaborn==0.11.0
 simplejson==3.16.0
+sqlmodels==0.6.0
 starlette==0.13.6
 tornado==6.1
 uvicorn==0.13.3
