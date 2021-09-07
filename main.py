@@ -66,7 +66,7 @@ engine = create_engine('sqlite:///bit_data.db')
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request:Request):
     # get a list of available features
-    return templates.TemplateResponse("welcome_alt.html",
+    return templates.TemplateResponse("welcome.html",
     {"request": request})
 
 # data properties page
@@ -97,6 +97,6 @@ async def upload(request:Request, background_tasks:BackgroundTasks,
     df_pred, _ = parse_contents(p, fn)
     df_pred.to_sql(name='bit_data', con=engine, if_exists='append', index=False)
 
-    return templates.TemplateResponse("datatable_version.html", 
+    return templates.TemplateResponse("datatable.html", 
     {"request": request, 
     "data_summary": [df_pred.to_html(table_id='table_id').replace('border="1"', ' ')]})
