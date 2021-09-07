@@ -13,7 +13,7 @@ from fastapi import FastAPI, Request, File, UploadFile, BackgroundTasks
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, create_engine
 
 # import chart and stats
 from utils.save_upload import save_uploaded_file
@@ -58,6 +58,9 @@ class bit_data(SQLModel, table=True):
     lat: float = Field(default=0.0)
     lon: float = Field(default=0.0)
 
+# set up sqllite db
+engine = create_engine('sqlite:///bit_data.db')
+
 
 # Welcome page
 @app.get("/", response_class=HTMLResponse)
@@ -92,6 +95,7 @@ async def upload(request:Request, background_tasks:BackgroundTasks,
 
     # open file and get dataframe
     df_pred, _ = parse_contents(p, fn)
+    df_pred.to_sql(name='bit_data', con=engine, if_exists='append', index=False)
 
     return templates.TemplateResponse("datatable_version.html", 
     {"request": request, 
