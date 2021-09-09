@@ -9,11 +9,12 @@ created on Sun Sep 5
 from typing import List, Optional
 from fastapi.datastructures import UploadFile
 
-from fastapi import FastAPI, Request, File, UploadFile, BackgroundTasks
+from fastapi import FastAPI, Request, File, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlmodel import SQLModel, Field, create_engine
+from starlette.responses import Response
 
 # import chart and stats
 from utils.save_upload import save_uploaded_file
@@ -21,7 +22,7 @@ from utils.read_excel import parse_contents
 
 # python modules
 import time
-import os
+import os, shutil
 from pathlib import Path
 
 # data processing
@@ -71,16 +72,21 @@ async def read_root(request:Request):
 
 # data properties page
 @app.post("/uploadfile")
-async def upload(request:Request, background_tasks:BackgroundTasks,
+async def upload(request:Request,
                 files: List[UploadFile] = File(...)):
-    
-    # create an upload folder directory using timestamp
-    upload_folder = os.path.join('./upload', time.ctime(time.time()))
-    os.makedirs(upload_folder)
     
     # upload files, kept multi file upload option for now
     for file in files:
         fn = file.filename
+        folder_name = fn.split(".")[0]
+
+        # create upload folder
+        upload_folder = os.path.join('./upload', folder_name)
+        try:
+            os.makedirs(upload_folder)
+        except OSError:
+            shutil.rmtree(upload_folder)
+            os.makedirs(upload_folder)
 
         p = Path(upload_folder +'/'+ fn)
 
@@ -100,3 +106,20 @@ async def upload(request:Request, background_tasks:BackgroundTasks,
     return templates.TemplateResponse("datatable.html", 
     {"request": request, 
     "data_summary": [df_pred.to_html(table_id='table_id').replace('border="1"', ' ')]})
+
+# sql queries page
+@app.post("/get-data")
+async def get_data(request:Request):
+    return templates.TemplateResponse("datatable.html", 
+    {"request": request})
+
+# sql queries page
+@app.post("/display-data")
+async def display_data(request:Request, response = Response):
+    
+    # connect to db
+    session = engine.connect()
+    session.query("select * from bit_data")
+
+    return templates.TemplateResponse("datatable.html", 
+    {"request": request})
