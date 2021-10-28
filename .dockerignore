@@ -11,3 +11,6 @@ Dockerfile
 .xls
 .xlsx
 .csv
+
+# ignore upload folder
+upload/
