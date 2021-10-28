@@ -3,8 +3,8 @@ __pycache__
 *.pyc
 
 # csv or excel files
-.xls
-.xlsx
-.csv
+*.xls
+*.xlsx
+*.csv
 
 # 

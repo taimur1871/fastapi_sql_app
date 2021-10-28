@@ -8,9 +8,6 @@ Dockerfile
 *.yaml
 
 # csv or excel files
-.xls
-.xlsx
-.csv
-
-# ignore upload folder
-upload/
+*.xls
+*.xlsx
+*.csv
