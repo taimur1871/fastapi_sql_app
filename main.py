@@ -10,10 +10,10 @@ from typing import List, Optional
 from fastapi.datastructures import UploadFile
 
 from fastapi import FastAPI, Request, File, UploadFile
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlmodel import SQLModel, Field, create_engine
+from sqlmodel import SQLModel, create_engine
 from starlette.responses import Response
 
 # import chart and stats
@@ -33,10 +33,16 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/upload", StaticFiles(directory="upload"), name="upload")
 templates = Jinja2Templates(directory="templates/")
+favicon_path = 'favicon.ico'
 
 
 # set up sqllite db
-engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/bit_data')
+data_engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/bit_data')
+
+# load favicon
+@app.get('/favicon.ico')
+async def favicon():
+    return FileResponse(favicon_path)
 
 
 # Welcome page
@@ -77,7 +83,7 @@ async def upload(request:Request,
 
     # open file and get dataframe
     df_pred, _ = parse_contents(p, fn)
-    df_pred.to_sql(name='bit_data', con=engine, if_exists='append', index=False)
+    df_pred.to_sql('bit_data', data_engine, if_exists='replace', index=False)
 
     return templates.TemplateResponse("datatable.html", 
     {"request": request, 
@@ -94,7 +100,7 @@ async def get_data(request:Request):
 async def display_data(request:Request, response = Response):
     
     # connect to db
-    session = engine.connect()
+    session = data_engine.connect()
     session.query("select * from bit_data")
 
     return templates.TemplateResponse("datatable.html", 

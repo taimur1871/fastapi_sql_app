@@ -1,0 +1,1 @@
+SELECT * FROM bit_data WHERE bit_size = 12.25;

@@ -5,8 +5,6 @@ import io
 import pandas as pd
 
 # function to read excel files to pandas
-# may replace it with dash or pyspark in future 
-# if dealing with larger datasets
 def parse_contents(file_path, filename):
     
     try:

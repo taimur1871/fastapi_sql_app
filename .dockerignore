@@ -11,3 +11,9 @@ Dockerfile
 *.xls
 *.xlsx
 *.csv
+
+# vscode files
+.vscode/*
+.metals/*
+.idea/*
+sql_venv
