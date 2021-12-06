@@ -85,12 +85,11 @@ async def upload(request:Request,
     df_pred, _ = parse_contents(p, fn)
     df_pred.to_sql('bit_data', data_engine, if_exists='replace', index=False)
 
-    return templates.TemplateResponse("datatable.html", 
-    {"request": request, 
-    "data_summary": [df_pred.to_html(table_id='table_id').replace('border="1"', ' ')]})
+    return templates.TemplateResponse("select_fields.html", 
+    {"request": request})
 
 # sql queries page
-@app.post("/get-data")
+@app.get("/get-data")
 async def get_data(request:Request):
     return templates.TemplateResponse("datatable.html", 
     {"request": request})

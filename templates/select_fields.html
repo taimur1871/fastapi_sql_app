@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<title>Drill Data Visualization</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  
+<!-- styling to scroll -->
+<style>
+body {
+  overflow: scroll;
+}
+</style>
+
+<body>
+<!-- !PAGE CONTENT! -->
+<div class="w3-content" style="max-width:1500px">
+
+  <!-- Header -->
+  <header class="w3-panel w3-center w3-opacity" style="padding:32px 32px">
+    <h1 class="w3-xlarge">Training Data</h1>
+
+      <div class="w3-bar w3-border">
+        <a href="/" class="w3-bar-item w3-button w3-hide-small">Home</a>
+      </div>
+  </header>
+
+  <!-- data grid -->
+  <div class="w3-row-padding w3-grayscale" style="margin-bottom:64px">
+        <h3 style="text-align: center;">Enter Data</h3>
+  </div>
+  <div>
+    <form style="text-align: center;">
+      <p>Well Name <input type="text" name="Well Name"></p>
+      <p>Bit Name <input type="text" name="Bit Name"></p>
+      <p>Bit SN <input type="text" name="Bit SN"></p>
+      <p>Depth In <input type="text" name="Depth In"></p>
+      <p>Depth Out <input type="text" name="Depth Out"></p>
+      <p>Hours <input type="text" name="Hours"></p><br>
+      <button onclick="get_data">Enter Data</button>
+    </form>
+  </div>
+
+</div>
+
+</body>
+
+</html>
