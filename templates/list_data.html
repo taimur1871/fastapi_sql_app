@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="./static/drop.css">
+<link rel="stylesheet" href="./static/master.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
@@ -26,17 +26,31 @@
   <div class="w3-half" style="margin-bottom:32px">
     <h3>Explore Datasets</h3>
         <p>Select Options</p>
-      <form action="/plot_data"  method="GET" width="25%">
-          <select name="features" width="25%">
-          {% for i in features %}
-            <option value="{{i}}" SELECTED>{{i}}</option>"
-          {% endfor %}
-          </select><br>
-          <select name="features" width="25%">
-          {% for i in features %}
-          <option value="{{i}}" SELECTED>{{i}}</option>"
-          {% endfor %}
-          </select>
+      <form action="/display-data"  method="GET" width="25%">
+          <p>Select x axis</p>
+            <select name="x_axis" width="25%">
+              {% for i in features %}
+                <option value="{{i}}" SELECTED>{{i}}</option>
+              {% endfor %}
+            </select><br>
+          <p>Select y axis</p>
+            <select name="y_axis" width="25%">
+              {% for i in features %}
+              <option value="{{i}}" SELECTED>{{i}}</option>
+              {% endfor %}
+            </select><br>
+          <p>Select color</p>
+            <select name="color" width="25%">
+              {% for i in features %}
+              <option value="{{i}}" SELECTED>{{i}}</option>
+              {% endfor %}
+            </select><br>
+          <p>File Path</p>
+            <select name="path" width="25%">
+              {% for i in path %}
+              <option value="{{i}}" SELECTED>{{i}}</option>
+              {% endfor %}
+            </select><br>
         <input type="submit"><br>
       </form><br>
 
@@ -44,17 +58,12 @@
 
   <div class="w3-half" style="margin-bottom:32px">
     <h3>Data Preview</h3>
-      <img src="{{data_url}}" width="100%">
+    <div class="resp-container">
+      <iframe class="resp-iframe" src="../static/crossplot.html" height="400" width="600" frameBorder="0" title="graph"></iframe><br>        
+    </div>
   </div>
 </div>
 </div>
 </body>
-
-<!-- datatable jquery script -->
-<script type="text/javascript">
-  $(document).ready( function () {
-      $('#table_id').DataTable();
-  }  );
-</script>
 
 </html>

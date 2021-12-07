@@ -22,6 +22,7 @@ from data_models.models import bit_data
 from utils.save_upload import save_uploaded_file
 from utils.read_excel import parse_contents
 from utils.get_session import create_session
+from utils.draw_charts import draw_chart
 
 # python modules
 import time
@@ -93,7 +94,7 @@ async def upload(request:Request,
     features = df_pred.columns.tolist()
 
     return templates.TemplateResponse("list_data.html", 
-    {"request": request, "features": features})
+    {"request": request, "features": features, "path": [p]})
 
 # sql queries page
 @app.get("/get-data")
@@ -102,12 +103,23 @@ async def get_data(request:Request):
     {"request": request})
 
 # sql queries page
-@app.post("/display-data")
-async def display_data(request:Request, response = Response):
+@app.get("/display-data", response_class=HTMLResponse)
+async def display_data(request:Request,
+                       file_path: Optional[str] = None,
+                       x_axis: Optional[str] = None,
+                       y_axis: Optional[str] = None,
+                       color: Optional[str] = None
+                       ):
     
-    # connect to db
-    session = data_engine.connect()
-    session.query("select * from bit_data")
+    # load dataframe
+    print(file_path)
+    print(x_axis)
+    print(y_axis)
+    print(color)
+    df = pd.read_csv("upload/ToolRun small/ToolRun small.csv")
+    features = df.columns.tolist()
+    draw_chart(df, x_axis, y_axis, color)
 
     return templates.TemplateResponse("list_data.html", 
-    {"request": request})
+    {"request": request, "features": features,
+    "path": ["upload/ToolRun small/ToolRun small.csv"]})
