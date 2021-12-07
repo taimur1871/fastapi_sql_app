@@ -7,10 +7,10 @@ from sqlmodel import SQLModel, Field
 # setup for SQLmodels
 class bit_data(SQLModel, table=True):
     __tablename__ = 'bit_data'
-    id: int = Field(default=None, primary_key=True, autoincrement=True)
+    id: int = Field(default=None, primary_key=True)
     bit_size: int = Field(default=0, nullable=False)
     bit_type: str = Field(default="", nullable=False)
-    mfg: str = Field(default="", backref="manufacturer", nullable=False)
+    mfg: str = Field(default="", nullable=False)
     serial_no: str = Field(default="")
     depth_in: float = Field(default=0.0)
     depth_out: float = Field(default=0.0)
@@ -29,7 +29,7 @@ class bit_data(SQLModel, table=True):
 
 class well_data(SQLModel, table=True):
     __tablename__ = 'well_data'
-    id: int = Field(default=None, primary_key=True, autoincrement=True)
+    id: int = Field(default=None, primary_key=True)
     well_name: str = Field(default="")
     operator: str = Field(default="")
     lat: float = Field(default=0.0)
@@ -38,7 +38,7 @@ class well_data(SQLModel, table=True):
 
 class manufacturer(SQLModel, table=True):
     __tablename__ = 'manufacturer'
-    id: int = Field(default=None, primary_key=True, autoincrement=True)
+    id: int = Field(default=None, primary_key=True)
     mfg_name: str = Field(default="")
 
 

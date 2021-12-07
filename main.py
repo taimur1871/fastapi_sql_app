@@ -9,16 +9,19 @@ created on Sun Sep 5
 from typing import List, Optional
 from fastapi.datastructures import UploadFile
 
-from fastapi import FastAPI, Request, File, UploadFile
+from fastapi import FastAPI, Request, File, UploadFile, Depends
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlmodel import SQLModel, create_engine
+from sqlmodel.orm.session import Session
 from starlette.responses import Response
+from data_models.models import bit_data
 
 # import chart and stats
 from utils.save_upload import save_uploaded_file
 from utils.read_excel import parse_contents
+from utils.get_session import create_session
 
 # python modules
 import time
@@ -47,8 +50,11 @@ async def favicon():
 
 # Welcome page
 @app.get("/", response_class=HTMLResponse)
+#async def read_root(request:Request, db: Session = Depends(create_session)):
 async def read_root(request:Request):
     # get a list of available features
+    # bit_info = db.query(bit_data).first()
+    # features = bit_info.__dict__.keys
     return templates.TemplateResponse("welcome.html",
     {"request": request})
 
@@ -84,9 +90,10 @@ async def upload(request:Request,
     # open file and get dataframe
     df_pred, _ = parse_contents(p, fn)
     df_pred.to_sql('bit_data', data_engine, if_exists='replace', index=False)
+    features = df_pred.columns.tolist()
 
-    return templates.TemplateResponse("select_fields.html", 
-    {"request": request})
+    return templates.TemplateResponse("list_data.html", 
+    {"request": request, "features": features})
 
 # sql queries page
 @app.get("/get-data")
@@ -102,5 +109,5 @@ async def display_data(request:Request, response = Response):
     session = data_engine.connect()
     session.query("select * from bit_data")
 
-    return templates.TemplateResponse("datatable.html", 
+    return templates.TemplateResponse("list_data.html", 
     {"request": request})

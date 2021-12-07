@@ -26,33 +26,25 @@
   <div class="w3-half" style="margin-bottom:32px">
     <h3>Explore Datasets</h3>
         <p>Select Options</p>
-      <form action="/getdata"  method="GET" width="25%">
+      <form action="/plot_data"  method="GET" width="25%">
           <select name="features" width="25%">
           {% for i in features %}
             <option value="{{i}}" SELECTED>{{i}}</option>"
           {% endfor %}
-        </select>
-        <input type="submit">
-      </form><br>
-
-      <form action="/getdata"  method="GET" width="25%">
-        <select name="features" width="25%">
-        {% for i in features %}
+          </select><br>
+          <select name="features" width="25%">
+          {% for i in features %}
           <option value="{{i}}" SELECTED>{{i}}</option>"
-        {% endfor %}
-      </select>
-      <input type="submit">
-    </form><br>
+          {% endfor %}
+          </select>
+        <input type="submit"><br>
+      </form><br>
 
   </div>
 
   <div class="w3-half" style="margin-bottom:32px">
     <h3>Data Preview</h3>
-      {{dataset_name}}<br>
-
-      {% for i in prop %}
-        {{i|safe}}
-      {% endfor %}
+      <img src="{{data_url}}" width="100%">
   </div>
 </div>
 </div>
