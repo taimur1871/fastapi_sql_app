@@ -4,7 +4,7 @@ Simple implementation of fastapi and sqlmodels to upload and store structured da
 ### Requirements
 * aiofiles==0.6.0
 * fastapi==0.63.0
-* grpcio==1.34.1
+* grpcio==1.44.0
 * gunicorn==20.0.4
 * Jinja2==2.11.2
 * matplotlib==3.1.2
