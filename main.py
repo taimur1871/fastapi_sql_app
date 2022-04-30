@@ -6,20 +6,23 @@ created on Sun Sep 5
 """
 # Library imports
 from typing import List, Optional
-from fastapi import FastAPI, Request, File, UploadFile
+from fastapi import FastAPI, Request, File, UploadFile, Depends
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy import insert
-from models import BitData
+
+import models
+from models import BitData, Base
 import schemas
 
 # import chart and stats
 from utils.save_upload import save_uploaded_file
 from utils.read_excel import parse_contents
 from charts.draw_chart import draw_chart
+from data_models.session import get_db
 
 # python modules
 import os
@@ -38,6 +41,7 @@ favicon_path = 'favicon.ico'
 
 # set up postgres db
 data_engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/bit_data')
+Base.metadata.create_all(bind=data_engine)
 
 
 # load favicon
@@ -98,7 +102,7 @@ async def upload(request: Request,
 @app.get("/get-data")
 async def get_data(request: Request,
                    bit_size: int = None):
-    db_session = Session
+    db_session = Session()
     result = db_session.query().filter_by('bit_size' == bit_size)
 
     return templates.TemplateResponse("datatable.html",
@@ -121,7 +125,7 @@ async def display_data(request: Request,
     print(color)
     df = pd.read_csv("upload/ToolRun small/ToolRun small.csv")
     features = df.columns.tolist()
-    draw_chart(df, x_axis, y_axis, color)
+    draw_chart(df)
 
     return templates.TemplateResponse("list_data.html",
                                       {"request": request, "features": features,
@@ -129,19 +133,29 @@ async def display_data(request: Request,
 
 
 # drill bit info page
-@app.get("/bit-info", response_model=schemas.BitInfo)
+@app.post("/bit-info", response_model=schemas.BitInfo)
 async def bit_info(size: float,
                    sn: str,
-                   well_name: str,
-                   bit_name: Optional[str] = None,
-                   bit_type: Optional[str] = None,
-                   depth_in: Optional[float] = None,
-                   depth_out: Optional[float] = None,  # this is interval drilled in current version of api
-                   hours: Optional[float] = None):
-    conn = data_engine.connect()
-    stmt = insert(BitData).values(bit_size=size, serial_no=sn)
-    conn.execute(stmt)
-    conn.commit()
-    conn.close()
-    return {"name": bit_name, "type": bit_type, "size": size, "sn": sn, "well_name": well_name,
+                   bit_name: str | None,
+                   bit_type: str | None,
+                   depth_in: float | None,
+                   depth_out: float | None,
+                   distance: float | None,
+                   hours: float | None,
+                   rop: float | None,
+                   db: Session = Depends(get_db),):
+    db_data = models.BitData(
+        bit_name=bit_name,
+        bit_size=size,
+        bit_type=bit_type,
+        serial_no=sn,
+        depth_in=depth_in,
+        depth_out=depth_out,
+        distance=distance,
+        hours=hours,
+        rop=rop
+    )
+    db.add(db_data)
+    db.commit()
+    return {"name": bit_name, "type": bit_type, "size": size, "sn": sn,
             "depth_in": depth_in, "depth_out": depth_out, "hours": hours}

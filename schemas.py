@@ -18,7 +18,6 @@ class BitInfo(BaseModel):
     type: Optional[str]
     size: float
     sn: str
-    well_name: str
     depth_in: Optional[float]
     depth_out: Optional[float]
     hours: Optional[float]
