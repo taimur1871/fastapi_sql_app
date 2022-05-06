@@ -16,7 +16,7 @@ class BitData(Base):
 
     id = Column(Integer, default=None, primary_key=True, nullable=False)
     bit_name = Column(String, default=None, nullable=False)
-    bit_size = Column(Integer, default=0, nullable=False)
+    bit_size = Column(Float, default=0, nullable=False)
     bit_type = Column(String, default="", nullable=False)
     mfg = Column(String, default="", nullable=False)
     serial_no = Column(String, default="", nullable=False)
