@@ -45,6 +45,7 @@ class Manufacturer(Base):
 
     id = Column(Integer, default=None, primary_key=True, nullable=False)
     mfg_name = Column(String, default="", nullable=True)
+    bit_class = Column(String, default="", nullable=True)
 
 
 class DullGrade(Base):
@@ -64,8 +65,8 @@ class DullGrade(Base):
     mfg_id = relationship('Manufacturer', foreign_keys='bit_data.mnaufacturer.id', post_update=True, lazy='select')
     well_name_id = Column(Integer, ForeignKey('well_data.id'), nullable=False)
     well_name = relationship('WellData', foreign_keys='bit_data.well_data.id', post_update=True, lazy='select')
-    bit_serial_num = Column(String, ForeignKey('bit_data.serial_num'), nullable=False)
-    bit_serial_num_id = relationship('BitData', foreign_keys='bit_data.bit_data.serial_num', post_update=True,
+    bit_serial_num = Column(Integer, ForeignKey('bit_data.id'), nullable=False)
+    bit_serial_num_id = relationship('BitData', foreign_keys='bit_data.bit_data.id', post_update=True,
                                      lazy='select')
 
 
