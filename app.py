@@ -7,11 +7,16 @@ Created on Tue Jan 26
 # 1. Library imports
 import uvicorn
 from fastapi import FastAPI
+from sqlalchemy.engine import create_engine
 
 # 2. Create app and model objects
 app = FastAPI()
 
+# set up postgres db
+data_engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/bit_data')
+
+
 # 1. Run the API with uvicorn
 if __name__ == '__main__':
-    #3uvicorn.run('main:app', host='0.0.0.0', port=80, workers = 4)
-    uvicorn.run('main:app', host='0.0.0.0', port=8000, reload = True)
+    # uvicorn.run('main:app', host='0.0.0.0', port=80, workers = 4)
+    uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=True)
